@@ -11,6 +11,7 @@ export interface BookFormValues {
 export interface BookFormProps {
   onSubmit: (payload: BookCreatePayload) => void | Promise<void>
   disabled?: boolean
+  busy?: boolean
 }
 
 const INITIAL_VALUES: BookFormValues = {
@@ -21,24 +22,33 @@ const INITIAL_VALUES: BookFormValues = {
 
 const STATUS_OPTIONS: BookStatus[] = ['Lido', 'Não lido']
 
-export function BookForm({ onSubmit, disabled = false }: BookFormProps) {
+export function BookForm({
+  onSubmit,
+  disabled = false,
+  busy = false,
+}: BookFormProps) {
   const [values, setValues] = useState<BookFormValues>(INITIAL_VALUES)
+  const locked = disabled || busy
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
-    if (disabled) return
+    if (locked) return
     const payload: BookCreatePayload = {
       title: values.title.trim(),
       author: values.author.trim(),
       status: values.status,
     }
     if (!payload.title || !payload.author) return
-    await onSubmit(payload)
-    setValues({ ...INITIAL_VALUES, status: 'Não lido' })
+    try {
+      await onSubmit(payload)
+      setValues({ ...INITIAL_VALUES, status: 'Não lido' })
+    } catch {
+      // O App já exibe o erro; mantém os campos para nova tentativa.
+    }
   }
 
   return (
-    <form className="book-form" onSubmit={handleSubmit}>
+    <form className="book-form" onSubmit={handleSubmit} aria-busy={busy}>
       <h2 className="book-form__heading">Novo livro</h2>
       <div className="book-form__fields">
         <label className="book-form__label">
@@ -52,7 +62,7 @@ export function BookForm({ onSubmit, disabled = false }: BookFormProps) {
             }
             placeholder="Ex.: Dom Casmurro"
             required
-            disabled={disabled}
+            disabled={locked}
             autoComplete="off"
           />
         </label>
@@ -67,7 +77,7 @@ export function BookForm({ onSubmit, disabled = false }: BookFormProps) {
             }
             placeholder="Ex.: Machado de Assis"
             required
-            disabled={disabled}
+            disabled={locked}
             autoComplete="off"
           />
         </label>
@@ -83,7 +93,7 @@ export function BookForm({ onSubmit, disabled = false }: BookFormProps) {
                 status: e.target.value as BookStatus,
               }))
             }
-            disabled={disabled}
+            disabled={locked}
           >
             {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s}>
@@ -93,8 +103,8 @@ export function BookForm({ onSubmit, disabled = false }: BookFormProps) {
           </select>
         </label>
       </div>
-      <button type="submit" className="book-form__submit" disabled={disabled}>
-        {disabled ? 'Salvando…' : 'Adicionar'}
+      <button type="submit" className="book-form__submit" disabled={locked}>
+        {busy ? 'Salvando…' : 'Adicionar'}
       </button>
     </form>
   )

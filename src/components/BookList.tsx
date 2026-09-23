@@ -19,7 +19,7 @@ export function BookList({
   if (books.length === 0) {
     return (
       <p className="book-list__empty" role="status">
-        Nenhum livro cadastrado ainda.
+        Sua estante está vazia. Cadastre o primeiro livro acima.
       </p>
     )
   }

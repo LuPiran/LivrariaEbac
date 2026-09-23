@@ -8,11 +8,12 @@
 }
 
 .app__header {
-  margin-bottom: 1.75rem;
+  margin-bottom: 2rem;
 }
 
 .app__title {
   font-size: clamp(1.75rem, 4vw, 2.25rem);
+  line-height: 1.2;
   margin: 0 0 0.5rem;
   letter-spacing: -0.02em;
 }
@@ -21,6 +22,7 @@
   margin: 0;
   color: var(--text);
   font-size: 1rem;
+  max-width: 40rem;
 }
 
 .app__banner,
@@ -35,22 +37,19 @@
 .app__banner {
   background: var(--accent-bg);
   border: 1px solid var(--accent-border);
+  color: var(--text-h);
 }
 
 .app__error {
-  background: rgba(220, 38, 38, 0.12);
-  border: 1px solid rgba(220, 38, 38, 0.35);
+  background: var(--danger-soft);
+  border: 1px solid var(--danger-line);
   color: var(--text-h);
 }
 
 .app__banner a {
   color: var(--accent);
   font-weight: 500;
-}
-
-.app__banner code,
-.app__error code {
-  font-size: 0.88em;
+  text-underline-offset: 0.2em;
 }
 
 .app__main {
@@ -68,17 +67,55 @@
 
 .app__section-title {
   font-size: 1.125rem;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
   margin: 0 0 1rem;
 }
 
-.app__loading {
+.app__loading,
+.app__recover-text {
   margin: 0;
   color: var(--text);
+}
+
+.app__retry {
+  font: inherit;
+  font-weight: 500;
+  margin-top: 1rem;
+  padding: 0.6rem 1.1rem;
+  min-height: 2.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.app__retry:hover:not(:disabled) {
+  border-color: var(--text);
+}
+
+.book-form__input,
+.book-form__submit,
+.book-item__select,
+.book-item__delete,
+.app__retry {
+  box-sizing: border-box;
+}
+
+.app__retry:focus-visible,
+.book-form__submit:focus-visible,
+.book-item__delete:focus-visible,
+.book-item__select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* Formulário */
 .book-form__heading {
   font-size: 1.125rem;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
   margin: 0 0 1rem;
 }
 
@@ -95,16 +132,24 @@
   gap: 0.35rem;
   font-size: 0.9rem;
   font-weight: 500;
+  line-height: 1.4;
   color: var(--text-h);
 }
 
 .book-form__input {
   font: inherit;
+  font-weight: 400;
   padding: 0.55rem 0.65rem;
+  min-height: 2.75rem;
   border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text-h);
+}
+
+.book-form__input::placeholder {
+  color: var(--text);
+  opacity: 1;
 }
 
 .book-form__input:focus-visible {
@@ -121,11 +166,12 @@
   font: inherit;
   font-weight: 500;
   padding: 0.6rem 1.1rem;
+  min-height: 2.75rem;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .book-form__submit:hover:not(:disabled) {
@@ -135,12 +181,6 @@
 .book-form__submit:disabled {
   opacity: 0.65;
   cursor: not-allowed;
-}
-
-@media (prefers-color-scheme: dark) {
-  .book-form__submit {
-    color: #1a1024;
-  }
 }
 
 /* Lista */
@@ -175,15 +215,25 @@
   background: var(--bg);
 }
 
+.book-item__main {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
 .book-item__title {
   font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-h);
   margin: 0 0 0.25rem;
+  overflow-wrap: anywhere;
 }
 
 .book-item__author {
   margin: 0;
   font-size: 0.9rem;
   color: var(--text);
+  overflow-wrap: anywhere;
 }
 
 .book-item__actions {
@@ -208,7 +258,9 @@
 .book-item__select {
   font: inherit;
   font-size: 0.9rem;
+  font-weight: 400;
   padding: 0.4rem 0.5rem;
+  min-height: 2.75rem;
   border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--bg);
@@ -218,27 +270,32 @@
 .book-item__delete {
   font: inherit;
   font-size: 0.875rem;
+  font-weight: 500;
   padding: 0.4rem 0.65rem;
+  min-height: 2.75rem;
   border-radius: 8px;
-  border: 1px solid rgba(220, 38, 38, 0.45);
+  border: 1px solid var(--danger-line);
   background: transparent;
-  color: #dc2626;
+  color: var(--danger);
   cursor: pointer;
 }
 
-@media (prefers-color-scheme: dark) {
-  .book-item__delete {
-    color: #f87171;
-    border-color: rgba(248, 113, 113, 0.45);
-  }
-}
-
 .book-item__delete:hover:not(:disabled) {
-  background: rgba(220, 38, 38, 0.08);
+  background: var(--danger-hover);
 }
 
 .book-item__delete:disabled,
 .book-item__select:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+@media (max-width: 36rem) {
+  .book-item__actions {
+    width: 100%;
+  }
+
+  .book-item__select {
+    flex: 1 1 auto;
+  }
 }
